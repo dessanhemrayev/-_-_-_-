@@ -242,9 +242,9 @@ namespace Моделирование_работы_сумматора_вычит�
                     }
                     int st1 = Convert.ToInt32(textBox1.Text);
                     if (st1 > 0)
-                        textBox3.Text = "+";
+                        textBox3.Text = "0";
                     else
-                        textBox3.Text = "-";
+                        textBox3.Text = "1";
                 }
             }
 
@@ -267,9 +267,9 @@ namespace Моделирование_работы_сумматора_вычит�
                     }
                     int st1 = Convert.ToInt32(textBox2.Text);
                     if (st1 > 0)
-                        textBox4.Text = "+";
+                        textBox4.Text = "0";
                     else
-                        textBox4.Text = "-";
+                        textBox4.Text = "1";
                 }
             }
         }
@@ -286,12 +286,12 @@ namespace Моделирование_работы_сумматора_вычит�
             int f1 = 1;
             int f2 = 0;
             int f3 = 0;
-            if (textBox3.Text == "-")
+            if (textBox3.Text == "1")
             {
                 f2 = 1;
             }
 
-            if (textBox4.Text == "-")
+            if (textBox4.Text == "1")
             {
                 f3 = 1;
             }
@@ -403,51 +403,80 @@ namespace Моделирование_работы_сумматора_вычит�
 
         private void button3_Click(object sender, EventArgs e)
         {
-            step += 1;
+            
             label15.Text = step.ToString();
             int start = 0;
-            int stop = 0;
+            int stop= 0;
+            int[] temp = new int[8];
+            int[] temp1 = new int[8];
+            int[] temp2 = new int[8];
+            int[] temp3 = new int[8];
+
             if (step<5)
             {
-
                 switch (step)
                 {
-                    case 1: { start = 0; stop = 7; break; }
-                    case 2: { start = 8; stop = 15; break; }
-                    case 3: { start = 16; stop = 23; break; }
-                    case 4: { start = 24; stop = 31; break; }
+                    case 0: { start = 0;stop = 7; break; }
+                    case 1: { start = 8; stop = 15; break; }
+                    case 2: { start = 16; stop = 23; break; }
+                    case 3: { start = 24; stop = 31; break; }
                 }
+               
                 int k = 0;
                 if (znak == 0)
                 {
-                    for (int i = start; i < stop + 1; i++)
+                    for (int i = 0; i < 8; i++)
                     {
 
+                        dataGridView10[i, 0].Value = dataGridView4[i, 0].Value;
+                        dataGridView8[i, 0].Value = dataGridView3[i, 0].Value;
+                        dataGridView9[i, 0].Value = dataGridView5[i, 0].Value;
+                        temp1[i]= Convert.ToInt32(dataGridView10[i, 0].Value);
+                        temp2[i] = Convert.ToInt32(dataGridView8[i, 0].Value);
+                        temp3[i] = Convert.ToInt32(dataGridView9[i, 0].Value);
 
-                        dataGridView8[k, 0].Value = dataGridView3[i, 0].Value;
-                        dataGridView9[k, 0].Value = dataGridView5[i, 0].Value;
-                        dataGridView10[k, 0].Value = dataGridView6[i, 0].Value;
-                        dataGridView7[i, 0].Value = summ3(Convert.ToInt32(dataGridView8[k, 0].Value), Convert.ToInt32(dataGridView9[k, 0].Value), Convert.ToInt32(dataGridView10[k, 0].Value));
-                        k++;
+                        temp[i]= summ3(Convert.ToInt32(dataGridView8[i, 0].Value), Convert.ToInt32(dataGridView9[i, 0].Value), Convert.ToInt32(dataGridView10[i, 0].Value));
+                        
+                        
                     }
                 }
                 else
                 {
-                    for (int i = start; i < stop + 1; i++)
+                    for (int i = 0; i < 8; i++)
                     {
+                        dataGridView10[i, 0].Value = dataGridView3[i, 0].Value;
 
-
-                        dataGridView8[k, 0].Value = dataGridView4[i, 0].Value;
-                        dataGridView9[k, 0].Value = dataGridView5[i, 0].Value;
-                        dataGridView10[k, 0].Value = dataGridView3[i, 0].Value;
-                        dataGridView7[i, 0].Value = raznost(Convert.ToInt32(dataGridView8[k, 0].Value), Convert.ToInt32(dataGridView10[k, 0].Value), Convert.ToInt32(dataGridView9[k, 0].Value));
-                        k++;
+                        dataGridView8[i, 0].Value = dataGridView4[i, 0].Value;
+                        dataGridView9[i, 0].Value = dataGridView5[i, 0].Value;
+                        
+                        temp[i] = raznost(Convert.ToInt32(dataGridView8[i, 0].Value), Convert.ToInt32(dataGridView10[i, 0].Value), Convert.ToInt32(dataGridView9[i, 0].Value));
                     }
                 }
               
 
             }
-
+            for (int i = start; i < stop+1; i++)
+            {
+                dataGridView7[i, 0].Value = temp[i%8];
+            }
+            for (int kl = 0; kl < 8; kl++)
+            {
+                for (int i = 0; i < 31 - 8 * step; i++)
+                {
+                 dataGridView4[i, 0].Value = Convert.ToInt32(dataGridView4[i + 1, 0].Value);
+                   
+                    dataGridView3[i, 0].Value = Convert.ToInt32( dataGridView3[i + 1, 0].Value);
+                 dataGridView5[i, 0].Value = Convert.ToInt32(dataGridView5[i + 1, 0].Value);
+                }
+            }
+            step += 1;
+            for (int i = 31; i > 31 - 8 * step; i--)
+            {
+                dataGridView4[i, 0].Value = "*";
+                dataGridView5[i, 0].Value = "*";
+                dataGridView3[i, 0].Value = "*";
+            }
+            
             if (step == 4)
             {
                 double result = 0;
@@ -466,7 +495,7 @@ namespace Моделирование_работы_сумматора_вычит�
                 }
                     button3.Enabled = false; 
             }
-
+            
         }
 
         private void button4_Click(object sender, EventArgs e)
